@@ -39,3 +39,4 @@ Update the HTML pages directly to edit services, portfolio projects, case studie
 The forms are front-end demos. They show a success message, but they do not send email or save submissions until connected to a form service or backend.
 
 Common options for a real form connection include Formspree, Netlify Forms, a CRM form embed, or a custom backend endpoint.
+"# spellgridit" 
