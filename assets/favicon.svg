@@ -1,0 +1,16 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SpellGrid favicon">
+  <defs>
+    <linearGradient id="faviconGradient" x1="6" y1="6" x2="58" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38BDF8"/>
+      <stop offset="0.55" stop-color="#A78BFA"/>
+      <stop offset="1" stop-color="#22C55E"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="#080A12"/>
+  <rect x="8" y="8" width="48" height="48" rx="15" fill="url(#faviconGradient)"/>
+  <path d="M43.2 22.2c-2.7-2-6.2-3-10.3-3-7 0-11.8 3.4-11.8 8.8 0 4.7 3.4 7 10.2 8.2l3.4.6c3 .5 4.1 1.3 4.1 2.9 0 2-2.2 3.2-5.9 3.2-4.1 0-7.5-1.3-10.4-3.8l-4 5.6c3.5 3.1 8.4 4.7 14.4 4.7 8.1 0 13.2-3.7 13.2-9.7 0-4.8-3.1-7.2-10.1-8.5l-3.6-.7c-2.9-.5-4.1-1.3-4.1-2.8 0-1.8 1.8-2.8 4.7-2.8 3.2 0 6 .9 8.7 2.8l1.5-5.5Z" fill="#04111D"/>
+  <circle cx="18" cy="18" r="3" fill="#04111D" opacity="0.65"/>
+  <circle cx="46" cy="46" r="3" fill="#04111D" opacity="0.65"/>
+  <circle cx="46" cy="18" r="2" fill="#04111D" opacity="0.35"/>
+  <circle cx="18" cy="46" r="2" fill="#04111D" opacity="0.35"/>
+</svg>
