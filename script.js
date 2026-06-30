@@ -50,14 +50,99 @@ document.querySelectorAll('[data-lead-form]').forEach((form) => {
   form.addEventListener('submit', (event) => {
     event.preventDefault();
 
+    const formData = new FormData(form);
+    const subject = encodeURIComponent('New SpellGridit project request');
+    const body = encodeURIComponent(Array.from(formData.entries())
+      .filter(([name]) => name !== 'consent')
+      .map(([name, value]) => `${name}: ${value || 'Not provided'}`)
+      .join('\n'));
+
+    window.location.href = `mailto:support@spellgridit.com?subject=${subject}&body=${body}`;
+
     const message = form.querySelector('.form-message');
     if (message) {
-      message.textContent = 'Thanks! Your project request has been received. SpellGridit will follow up soon.';
+      message.textContent = 'Your email app is opening with the request addressed to support@spellgridit.com.';
     }
-
-    form.reset();
   });
 });
+
+const consentStorageKey = 'spellgridit-cookie-consent-v2';
+
+if (!localStorage.getItem(consentStorageKey)) {
+  const consentModal = document.createElement('div');
+  consentModal.className = 'consent-modal';
+  consentModal.setAttribute('role', 'dialog');
+  consentModal.setAttribute('aria-modal', 'true');
+  consentModal.setAttribute('aria-labelledby', 'consent-title');
+  consentModal.innerHTML = `
+    <div class="consent-card">
+      <div class="consent-copy">
+        <p class="eyebrow">Privacy & Cookies</p>
+        <h2 id="consent-title">We value your privacy</h2>
+        <p>SpellGridit uses essential cookies and similar technologies to keep the website working, improve your browsing experience, and understand how visitors use our pages.</p>
+        <p class="consent-links"><span>Privacy Policy</span> • <span>Cookie Policy</span></p>
+      </div>
+      <div class="consent-actions">
+        <button class="button button-secondary" type="button" data-consent-choice="denied">Deny</button>
+        <button class="button" type="button" data-consent-choice="accepted">Accept All</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(consentModal);
+  document.body.classList.add('consent-open');
+
+
+  consentModal.querySelectorAll('[data-consent-choice]').forEach((button) => {
+    button.addEventListener('click', () => {
+      localStorage.setItem(consentStorageKey, button.dataset.consentChoice);
+      consentModal.remove();
+      document.body.classList.remove('consent-open');
+    });
+  });
+}
+
+const serviceSearchForm = document.querySelector('[data-service-search-form]');
+const serviceSearchInput = document.querySelector('[data-service-search]');
+const homeServicesGrid = document.querySelector('.home-services-grid');
+const homeServiceCards = homeServicesGrid ? Array.from(homeServicesGrid.querySelectorAll('.service-card')) : [];
+
+if (serviceSearchForm && serviceSearchInput && homeServicesGrid && homeServiceCards.length) {
+  const emptyMessage = document.createElement('div');
+  emptyMessage.className = 'service-search-empty';
+  emptyMessage.textContent = 'No matching service found. Try Google Ads, Social Media, Email, WhatsApp, Leads, Influencer, or Reputation.';
+  emptyMessage.hidden = true;
+  homeServicesGrid.appendChild(emptyMessage);
+
+  const filterServices = () => {
+    const query = serviceSearchInput.value.trim().toLowerCase();
+    let visibleCount = 0;
+
+    homeServiceCards.forEach((card) => {
+      const matches = !query || card.textContent.toLowerCase().includes(query);
+      card.classList.toggle('is-hidden', !matches);
+      if (matches) visibleCount += 1;
+    });
+
+    emptyMessage.hidden = visibleCount !== 0;
+  };
+
+  serviceSearchInput.addEventListener('input', filterServices);
+
+  serviceSearchForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    filterServices();
+    document.querySelector('#services')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  document.querySelectorAll('[data-service-chip]').forEach((chip) => {
+    chip.addEventListener('click', () => {
+      serviceSearchInput.value = chip.dataset.serviceChip;
+      filterServices();
+      document.querySelector('#services')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+}
 
 const projectFilterButtons = document.querySelectorAll('[data-project-filter]');
 const projectCards = document.querySelectorAll('[data-project-category]');
