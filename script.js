@@ -53,21 +53,55 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
 });
 
 document.querySelectorAll('[data-lead-form]').forEach((form) => {
-  form.addEventListener('submit', (event) => {
+  form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const formData = new FormData(form);
-    const subject = encodeURIComponent('New SpellGridit project request');
-    const body = encodeURIComponent(Array.from(formData.entries())
-      .filter(([name]) => name !== 'consent')
-      .map(([name, value]) => `${name}: ${value || 'Not provided'}`)
-      .join('\n'));
-
-    window.location.href = `mailto:support@spellgridit.com?subject=${subject}&body=${body}`;
-
+    const submitButton = form.querySelector('button[type="submit"]');
     const message = form.querySelector('.form-message');
+    const originalText = submitButton ? submitButton.textContent : '';
+    const formData = new FormData(form);
+
+    if (!formData.has('access_key')) {
+      formData.append('access_key', 'c8a2cc4c-c15a-486f-a05c-fa97197d928d');
+    }
+
+    formData.append('subject', 'New SpellGridit project request');
+    formData.append('from_name', 'SpellGridit Website');
+
+    if (submitButton) {
+      submitButton.textContent = 'Sending...';
+      submitButton.disabled = true;
+    }
+
     if (message) {
-      message.textContent = 'Your email app is opening with the request addressed to support@spellgridit.com.';
+      message.textContent = '';
+    }
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        if (message) {
+          message.textContent = 'Success! Your message has been sent to support@spellgridit.com.';
+        }
+        form.reset();
+      } else if (message) {
+        message.textContent = `Error: ${data.message || 'Unable to send your message.'}`;
+      }
+    } catch (error) {
+      if (message) {
+        message.textContent = 'Something went wrong. Please try again.';
+      }
+    } finally {
+      if (submitButton) {
+        submitButton.textContent = originalText;
+        submitButton.disabled = false;
+      }
     }
   });
 });
