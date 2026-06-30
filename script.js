@@ -29,6 +29,12 @@ if (siteHeader && navToggle && mainNav) {
   });
 }
 
+document.querySelectorAll('[data-affiliate-popup]').forEach((link) => {
+  link.addEventListener('click', (event) => {
+    event.preventDefault();
+  });
+});
+
 document.querySelectorAll('a[href^="#"]').forEach((link) => {
   link.addEventListener('click', (event) => {
     const targetId = link.getAttribute('href');
